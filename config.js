@@ -14,7 +14,7 @@ const CONFIG = {
   storeTagline: "សៀវភៅល្អៗ បង្កើនចំណេះដឹង និងការអភិវឌ្ឍន៍ខ្លួន",
   storeTaglineEn: "Discover Your Next Great Read",
   storeDescription: "សៀវភៅគុណភាពខ្ពស់ សៀវភៅអភិវឌ្ឍន៍ខ្លួន បច្ចេកវិទ្យា និងសម្ភារសិក្សា",
-  appVersion: "1.4.0", // 👈 Version របស់កម្មវិធី (ដំឡើងលេខនេះពេលកែប្រែកូដ)
+  appVersion: "1.4.1", // 👈 Version របស់កម្មវិធី (ដំឡើងលេខនេះពេលកែប្រែកូដ)
   
   currency: "$", // USD ($) standard
   currencyCode: "USD",
@@ -39,7 +39,7 @@ const CONFIG = {
   // (បើកមុខងារនេះ ដើម្បី Sync ទំនិញរវាងទូរស័ព្ទម្ចាស់ហាង និងអតិថិជនទាំងអស់ដោយស្វ័យប្រវត្តិ)
   cloudSync: {
     enabled: true,
-    apiUrl: "", // e.g. "https://sv-bookstore-default-rtdb.firebaseio.com/products.json" or JSONBin URL
+    apiUrl: "https://sv-bookstore-default-rtdb.asia-southeast1.firebasedatabase.app/products.json", // Firebase Realtime Database
     apiKey: "", // Optional Auth Token / Master Key
     autoSyncOnSave: true // Auto sync to Cloud whenever owner adds or modifies an item
   },

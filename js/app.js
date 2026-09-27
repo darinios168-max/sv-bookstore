@@ -134,16 +134,16 @@
   function getCloudSyncConfig() {
     const customUrl = localStorage.getItem('sv_cloud_api_url');
     const customKey = localStorage.getItem('sv_cloud_api_key');
-    const hasDefaultUrl = Boolean(CONFIG.cloudSync && CONFIG.cloudSync.apiUrl);
+    const defaultUrl = (CONFIG.cloudSync && CONFIG.cloudSync.apiUrl) ? CONFIG.cloudSync.apiUrl : '';
     const enabled = localStorage.getItem('sv_cloud_enabled') !== 'false';
 
-    const apiUrl = customUrl !== null ? customUrl : (hasDefaultUrl ? CONFIG.cloudSync.apiUrl : '');
-    const apiKey = customKey !== null ? customKey : (CONFIG.cloudSync && CONFIG.cloudSync.apiKey ? CONFIG.cloudSync.apiKey : '');
+    const apiUrl = (customUrl && customUrl.trim()) ? customUrl.trim() : defaultUrl.trim();
+    const apiKey = (customKey && customKey.trim()) ? customKey.trim() : ((CONFIG.cloudSync && CONFIG.cloudSync.apiKey) ? CONFIG.cloudSync.apiKey : '');
 
     return {
       enabled: enabled && Boolean(apiUrl),
-      apiUrl: apiUrl.trim(),
-      apiKey: apiKey.trim(),
+      apiUrl: apiUrl,
+      apiKey: apiKey,
       autoSyncOnSave: CONFIG.cloudSync ? (CONFIG.cloudSync.autoSyncOnSave !== false) : true
     };
   }
@@ -161,7 +161,13 @@
         headers['Authorization'] = `Bearer ${config.apiKey}`;
       }
 
-      const res = await fetch(config.apiUrl, {
+      let fetchUrl = config.apiUrl;
+      if (config.apiKey && (fetchUrl.includes('firebaseio.com') || fetchUrl.includes('firebasedatabase.app')) && !fetchUrl.includes('auth=')) {
+        const sep = fetchUrl.includes('?') ? '&' : '?';
+        fetchUrl = `${fetchUrl}${sep}auth=${encodeURIComponent(config.apiKey)}`;
+      }
+
+      const res = await fetch(fetchUrl, {
         method: 'GET',
         headers: headers,
         cache: 'no-cache'
@@ -218,7 +224,7 @@
 
       let targetUrl = config.apiUrl;
       // If Firebase Realtime Database URL and apiKey provided, append auth
-      if (config.apiKey && targetUrl.includes('firebaseio.com') && !targetUrl.includes('auth=')) {
+      if (config.apiKey && (targetUrl.includes('firebaseio.com') || targetUrl.includes('firebasedatabase.app')) && !targetUrl.includes('auth=')) {
         const sep = targetUrl.includes('?') ? '&' : '?';
         targetUrl = `${targetUrl}${sep}auth=${encodeURIComponent(config.apiKey)}`;
       }
