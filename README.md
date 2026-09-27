@@ -2,7 +2,10 @@
 
 A modern, fast, and feature-rich **Telegram Mini App (TWA)** for e-commerce and bookstore sales — built with **100% pure client-side frontend (HTML, CSS, JavaScript)**. **No backend server, no database hosting, and no maintenance required!**
 
-Connected to your Telegram Bot: **[@svbookstorebot](https://t.me/svbookstorebot)**
+- 🌐 **Live Mini App URL:** [https://darinios168-max.github.io/sv-bookstore/](https://darinios168-max.github.io/sv-bookstore/)
+- 🤖 **Telegram Bot:** [@svbookstorebot](https://t.me/svbookstorebot)
+- 👑 **Store Owner:** [@Svbook168](https://t.me/Svbook168) (Chat ID: `6503377762`)
+- ☁️ **Cloud Database:** Firebase Realtime Database (Auto-Sync)
 
 ---
 
