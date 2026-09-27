@@ -58,24 +58,41 @@ You don't need any server!
 
 ---
 
-## 🌐 Step 2: Host It for Free (Takes 2 Minutes)
+## 🌐 Step 2: Auto-Deploy to Free Hosting
 
-Telegram requires Mini Apps to have an **HTTPS** web link. Because this project is pure frontend, you can host it **100% free forever** on any of these services:
+Telegram requires Mini Apps to have an **HTTPS** web link. You can host and auto-deploy it **100% free forever**:
 
-### Option A: GitHub Pages (Recommended)
+### 🚀 Option A: 1-Click Auto-Deploy to GitHub Pages (Recommended)
 1. Create a free GitHub repository (e.g. `svbookstore`).
-2. Upload all the files from this folder (`index.html`, `preview.html`, `config.js`, `css/`, `js/`).
-3. Go to **Settings** -> **Pages** -> Source: `main` branch -> Click **Save**.
-4. Your Mini App URL will be ready: `https://<your-username>.github.io/svbookstore/`
+2. Open Terminal in this folder and connect to your repository:
+   ```bash
+   git remote add origin https://github.com/<YOUR-USERNAME>/<YOUR-REPO>.git
+   ```
+3. Run the automated deploy script:
+   ```bash
+   ./deploy.sh
+   ```
+4. GitHub Actions will automatically build & deploy your Mini App!
+5. In your GitHub repo: **Settings ➔ Pages ➔ Source: GitHub Actions**.
+   Your Mini App URL will be ready: `https://<YOUR-USERNAME>.github.io/<YOUR-REPO>/`
 
-### Option B: Vercel (Drag & Drop)
-1. Go to [vercel.com](https://vercel.com) (free account).
-2. Click **Add New Project** -> Drag and drop this entire `Telegram mini bot` folder.
-3. Click **Deploy**. Vercel will give you an instant HTTPS URL like `https://svbookstore.vercel.app`.
+### ⚡ Option B: Vercel Auto-Deploy
+1. Go to [vercel.com](https://vercel.com).
+2. Connect your GitHub repository (or drag-and-drop this folder).
+3. Vercel automatically deploys every time you push code, with instant link: `https://svbookstore.vercel.app`.
 
-### Option C: Netlify (Drag & Drop)
-1. Go to [app.netlify.com/drop](https://app.netlify.com/drop).
-2. Drag and drop this folder. You'll get an instant live HTTPS link!
+---
+
+## ☁️ Step 3: Cloud Database Realtime Sync (បន្ថែមទំនិញលើទូរស័ព្ទ ➔ Sync ភ្លាមៗ)
+
+ដើម្បីឱ្យរាល់ពេលលោកគ្រូបន្ថែម ឬកែប្រែទំនិញលើទូរស័ព្ទ អតិថិជនទាំងអស់បានឃើញទំនិញថ្មីភ្លាមៗ **ដោយមិនបាច់ Deploy ម្តងទៀត**៖
+
+1. ចូលទៅកាន់ **[console.firebase.google.com](https://console.firebase.google.com)** (Free 100%)
+2. បង្កើត Project មួយ (ឈ្មោះ `sv-bookstore`)
+3. ចូល **Build ➔ Realtime Database ➔ Create Database ➔ Start in test mode**
+4. ចម្លង Database URL របស់អ្នក (ឧ. `https://sv-bookstore-default-rtdb.firebaseio.com/products.json`)
+5. បើក Admin Manager ក្នុង Mini App ➔ ចូល **⚙️ ការកំណត់** ➔ បិទភ្ជាប់ URL ក្នុង **Cloud Database URL** រួចចុច **"Save" & "Push ទៅ Cloud"**!
+6. ចាប់ពីពេលនេះទៅ រាល់ពេលបន្ថែមទំនិញថ្មី វានឹង **Auto-Sync** ទៅកាន់អតិថិជនទាំងអស់ភ្លាមៗ!
 
 ---
 
