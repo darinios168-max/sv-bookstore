@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegram Mini App Simulator - SV Bookstore</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+    }
+    .preview-header {
+      text-align: center;
+      margin-bottom: 24px;
+      max-width: 600px;
+    }
+    .preview-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .preview-header p {
+      font-size: 14px;
+      color: #94a3b8;
+    }
+    .controls-panel {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .ctrl-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #f1f5f9;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .ctrl-btn:hover {
+      background: #334155;
+      border-color: #38bdf8;
+    }
+    .ctrl-btn.active {
+      background: #0284c7;
+      border-color: #38bdf8;
+      color: #fff;
+    }
+    .device-container {
+      position: relative;
+      width: 414px;
+      height: 840px;
+      background: #000;
+      border-radius: 48px;
+      padding: 12px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+    .device-screen {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border-radius: 38px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .dynamic-island {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 30px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 1000;
+    }
+    .tg-status-bar {
+      height: 48px;
+      background: #242f3d;
+      color: #fff;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 24px 8px 24px;
+      font-size: 12px;
+      font-weight: 600;
+      justify-content: space-between;
+      z-index: 999;
+    }
+    .tg-top-bar {
+      height: 44px;
+      background: #242f3d;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .tg-top-bar .title {
+      font-size: 15px;
+    }
+    .tg-top-bar .close-link {
+      color: #5288c1;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    iframe {
+      width: 100%;
+      flex-grow: 1;
+      border: none;
+      background: #f7f9fa;
+    }
+    .info-footer {
+      margin-top: 24px;
+      font-size: 13px;
+      color: #64748b;
+      text-align: center;
+      max-width: 500px;
+    }
+    .info-footer a {
+      color: #38bdf8;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="preview-header">
+    <h1>📱 Telegram Mini App Simulator</h1>
+    <p>Previewing <b>បណ្ណាគារ សៃវ៉ា (@svbookstorebot)</b> for <b>@Svbook168</b> (Admin: 6503377762)</p>
+  </div>
+
+  <div class="controls-panel">
+    <button class="ctrl-btn active" id="btn-device-iphone">iPhone 15 Pro</button>
+    <button class="ctrl-btn" id="btn-device-android">Android</button>
+    <button class="ctrl-btn" id="btn-theme-toggle">🌓 Dark/Light</button>
+    <button class="ctrl-btn" id="btn-role-owner" style="background: rgba(243, 156, 18, 0.2); border-color: #f39c12; color: #f39c12; font-weight: 700;">👑 មើលជាម្ចាស់ហាង (@Svbook168)</button>
+    <button class="ctrl-btn" id="btn-role-customer" style="color: #94a3b8;">👤 មើលជាភ្ញៀវ (Customer)</button>
+    <button class="ctrl-btn" id="btn-reload">🔄 Reload</button>
+    <button class="ctrl-btn" id="btn-open-fullscreen">↗️ Fullscreen</button>
+  </div>
+
+  <div class="device-container" id="device-box">
+    <div class="device-screen">
+      <div class="dynamic-island"></div>
+      <div class="tg-status-bar" id="tg-status-bar">
+        <span>9:41</span>
+        <span>5G  100%</span>
+      </div>
+      <div class="tg-top-bar" id="tg-top-bar">
+        <span class="close-link">Close</span>
+        <span class="title">បណ្ណាគារ សៃវ៉ា (SV Bookstore)</span>
+        <span style="font-size: 18px;">⋯</span>
+      </div>
+      <iframe id="app-frame" src="index.html?role=owner"></iframe>
+    </div>
+  </div>
+
+  <div class="info-footer">
+    Tested with pure client-side Telegram WebApp SDK. No backend required! Everything works instantly.<br>
+    Open <a href="index.html" target="_blank">index.html</a> directly to run as a full webpage.
+  </div>
+
+  <script>
+    const frame = document.getElementById('app-frame');
+    const deviceBox = document.getElementById('device-box');
+    const statusBar = document.getElementById('tg-status-bar');
+    const topBar = document.getElementById('tg-top-bar');
+
+    let isDark = false;
+
+    document.getElementById('btn-device-iphone').addEventListener('click', function() {
+      deviceBox.style.width = '414px';
+      deviceBox.style.height = '840px';
+      deviceBox.style.borderRadius = '48px';
+      document.getElementById('btn-device-iphone').classList.add('active');
+      document.getElementById('btn-device-android').classList.remove('active');
+    });
+
+    document.getElementById('btn-device-android').addEventListener('click', function() {
+      deviceBox.style.width = '390px';
+      deviceBox.style.height = '800px';
+      deviceBox.style.borderRadius = '24px';
+      document.getElementById('btn-device-android').classList.add('active');
+      document.getElementById('btn-device-iphone').classList.remove('active');
+    });
+
+    document.getElementById('btn-role-owner').addEventListener('click', function() {
+      localStorage.setItem('sv_preview_role', 'owner');
+      this.style.background = 'rgba(243, 156, 18, 0.2)';
+      this.style.borderColor = '#f39c12';
+      this.style.color = '#f39c12';
+      document.getElementById('btn-role-customer').style.background = '#1e293b';
+      document.getElementById('btn-role-customer').style.borderColor = '#334155';
+      document.getElementById('btn-role-customer').style.color = '#94a3b8';
+      frame.src = 'index.html?role=owner&t=' + Date.now();
+    });
+
+    document.getElementById('btn-role-customer').addEventListener('click', function() {
+      localStorage.setItem('sv_preview_role', 'customer');
+      this.style.background = 'rgba(56, 189, 248, 0.2)';
+      this.style.borderColor = '#38bdf8';
+      this.style.color = '#38bdf8';
+      document.getElementById('btn-role-owner').style.background = '#1e293b';
+      document.getElementById('btn-role-owner').style.borderColor = '#334155';
+      document.getElementById('btn-role-owner').style.color = '#94a3b8';
+      frame.src = 'index.html?role=customer&t=' + Date.now();
+    });
+
+    document.getElementById('btn-theme-toggle').addEventListener('click', function() {
+      isDark = !isDark;
+      statusBar.style.background = isDark ? '#17212b' : '#ffffff';
+      statusBar.style.color = isDark ? '#ffffff' : '#000000';
+      topBar.style.background = isDark ? '#17212b' : '#ffffff';
+      topBar.style.color = isDark ? '#ffffff' : '#000000';
+
+      try {
+        const frameDoc = frame.contentDocument || frame.contentWindow.document;
+        frameDoc.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+      } catch (e) {
+        console.warn('Cross-origin frame check', e);
+      }
+    });
+
+    document.getElementById('btn-reload').addEventListener('click', function() {
+      const role = localStorage.getItem('sv_preview_role') || 'owner';
+      frame.src = 'index.html?role=' + role + '&t=' + Date.now();
+    });
+
+    document.getElementById('btn-open-fullscreen').addEventListener('click', function() {
+      window.open('index.html', '_blank');
+    });
+  </script>
+</body>
+</html>

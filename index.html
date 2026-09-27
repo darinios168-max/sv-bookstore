@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#ffffff">
+  <title>SV Bookstore - Telegram Mini App</title>
+
+  <!-- Telegram WebApp SDK Script -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- App Stylesheet -->
+  <link rel="stylesheet" href="css/style.css?v=1.4.0">
+</head>
+<body>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Modal Backdrop Overlay -->
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+
+  <!-- Top App Bar / Header -->
+  <header class="app-header">
+    <div class="header-top">
+      <div class="brand-section">
+        <div class="brand-logo">📖</div>
+        <div class="brand-info">
+          <h1>
+            បណ្ណាគារ សៃវ៉ា
+            <span class="verified-badge" title="Official Telegram Store">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </span>
+          </h1>
+          <p>SV Bookstore • សៀវភៅល្អៗ & សម្ភារសិក្សា</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" id="header-admin-btn" title="Store Settings & Admin" style="display: none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+        <button class="icon-btn" id="header-cart-btn" title="View Cart">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span class="cart-counter" id="cart-counter">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Search Input -->
+    <div class="search-wrapper">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" class="search-input" id="search-input" placeholder="ស្វែងរកចំណងជើងសៀវភៅ ឬអ្នកនិពន្ធ (Search books)...">
+      <button class="search-clear" id="search-clear">✕</button>
+    </div>
+  </header>
+
+  <!-- Welcome / Promo Banner -->
+  <section class="welcome-banner">
+    <div class="banner-content">
+      <span class="banner-tag">ប្រូម៉ូសិនពិសេស • Special Launch</span>
+      <h2>សូមស្វាគមន៍, <span id="user-welcome-name">អ្នកអាន</span>! 📚</h2>
+      <p>បញ្ចុះតម្លៃ 10% ដោយប្រើកូដ <b>WELCOME10</b> ឬ <b>SV168</b> នៅពេលទូទាត់ប្រាក់។</p>
+    </div>
+  </section>
+
+  <!-- Category Filter Carousel -->
+  <nav class="category-scroll" id="category-scroll"></nav>
+
+  <!-- Section Title -->
+  <div class="section-header">
+    <h2 class="section-title">Book Collection</h2>
+    <span class="section-count" id="section-count">Loading items...</span>
+  </div>
+
+  <!-- Product Catalog Grid -->
+  <main class="products-grid" id="products-grid"></main>
+
+  <!-- ========================================================================
+       MODAL 1: PRODUCT DETAILS SHEET
+       ======================================================================== -->
+  <div class="bottom-sheet" id="product-detail-modal">
+    <div class="sheet-handle-bar"><div class="sheet-handle"></div></div>
+    <div class="sheet-header">
+      <div class="sheet-title">Book Overview</div>
+      <button class="sheet-close-btn">✕</button>
+    </div>
+    <div class="sheet-content" id="detail-modal-body"></div>
+    <div class="sheet-footer">
+      <button class="btn-primary" id="modal-add-cart-submit">Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 2: SHOPPING CART SHEET
+       ======================================================================== -->
+  <div class="bottom-sheet" id="cart-modal">
+    <div class="sheet-handle-bar"><div class="sheet-handle"></div></div>
+    <div class="sheet-header">
+      <div class="sheet-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        Shopping Cart
+      </div>
+      <button class="sheet-close-btn">✕</button>
+    </div>
+    <div class="sheet-content">
+      <!-- Empty Cart State -->
+      <div class="empty-state" id="cart-empty-state" style="display: none;">
+        <div class="empty-icon">🛒</div>
+        <h3>Your cart is empty</h3>
+        <p>Explore our library and pick some inspiring books!</p>
+      </div>
+
+      <!-- Active Cart Items -->
+      <div id="cart-active-content">
+        <div class="cart-list" id="cart-items-list"></div>
+
+        <!-- Coupon Input -->
+        <div class="coupon-section">
+          <input type="text" class="coupon-input" id="coupon-input" placeholder="Promo code (e.g. WELCOME10)">
+          <button class="coupon-btn" id="coupon-apply-btn">Apply</button>
+        </div>
+
+        <!-- Order Summary Card -->
+        <div class="summary-card">
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span id="cart-subtotal">$0.00</span>
+          </div>
+          <div class="summary-row" id="cart-discount-row" style="display: none;">
+            <span>Coupon Discount</span>
+            <span class="summary-discount" id="cart-discount">-$0.00</span>
+          </div>
+          <div class="summary-row">
+            <span>Delivery</span>
+            <span id="cart-shipping">$0.00</span>
+          </div>
+          <div class="summary-row total">
+            <span>Estimated Total</span>
+            <span id="cart-total">$0.00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sheet-footer">
+      <button class="btn-primary" id="cart-checkout-btn">Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 3: CHECKOUT DETAILS SHEET
+       ======================================================================== -->
+  <div class="bottom-sheet" id="checkout-modal">
+    <div class="sheet-handle-bar"><div class="sheet-handle"></div></div>
+    <div class="sheet-header">
+      <div class="sheet-title">Order & Delivery Details</div>
+      <button class="sheet-close-btn">✕</button>
+    </div>
+    <div class="sheet-content">
+      <form id="checkout-form" onsubmit="event.preventDefault()">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" id="checkout-name" class="form-control" placeholder="Recipient's name" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Phone Number *</label>
+          <input type="tel" id="checkout-phone" class="form-control" placeholder="+1 (555) 000-0000" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Telegram Handle (Optional)</label>
+          <input type="text" id="checkout-telegram-handle" class="form-control" placeholder="@username" readonly style="opacity: 0.75;">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Shipping / Delivery Address *</label>
+          <textarea id="checkout-address" class="form-control" placeholder="Street, Apartment/Building, City, Postal Code" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Special Delivery Instructions</label>
+          <input type="text" id="checkout-note" class="form-control" placeholder="e.g. Leave at front door or call upon arrival">
+        </div>
+
+        <div class="form-group" style="margin-top: 16px;">
+          <label class="form-label">Payment Method</label>
+          <div class="payment-methods" id="payment-methods-list"></div>
+        </div>
+
+        <!-- Bank Transfer Details (shows if bank_qr is chosen) -->
+        <div class="bank-transfer-box" id="bank-transfer-details"></div>
+
+        <div class="summary-card" style="margin-top: 14px;">
+          <div class="summary-row total">
+            <span>Total Payable</span>
+            <span id="checkout-summary-total">$0.00</span>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="sheet-footer">
+      <button class="btn-primary" id="checkout-confirm-btn">Confirm Order</button>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 4: ORDER SUCCESS SHEET
+       ======================================================================== -->
+  <div class="bottom-sheet" id="success-modal">
+    <div class="sheet-handle-bar"><div class="sheet-handle"></div></div>
+    <div class="sheet-header">
+      <div class="sheet-title">Order Status</div>
+      <button class="sheet-close-btn">✕</button>
+    </div>
+    <div class="sheet-content" id="success-modal-body"></div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 5: ADMIN / STORE SETTINGS SHEET
+       ======================================================================== -->
+  <div class="bottom-sheet" id="admin-modal">
+    <div class="sheet-handle-bar"><div class="sheet-handle"></div></div>
+    <div class="sheet-header">
+      <div class="sheet-title">Store Settings & Admin</div>
+      <button class="sheet-close-btn">✕</button>
+    </div>
+    <div class="sheet-content" id="admin-modal-body"></div>
+  </div>
+
+  <!-- Floating Bottom Bar (Used for Browser Preview & Fallback) -->
+  <div class="floating-bottom-bar" id="floating-bottom-bar" style="display: none;">
+    <div class="floating-cart-info">
+      <span class="floating-items-count" id="floating-items-count">0 items</span>
+      <span class="floating-total-price" id="floating-total-price">$0.00</span>
+    </div>
+    <button class="btn-primary" id="floating-checkout-btn" style="width: auto; padding: 0 20px; height: 42px;">
+      View Cart
+    </button>
+  </div>
+
+  <!-- Browser Preview Telegram MainButton Simulation (Optional dev button) -->
+  <button id="native-main-btn-mock" class="btn-primary" style="display: none; position: fixed; bottom: 12px; left: 16px; right: 16px; z-index: 999; box-shadow: 0 4px 14px rgba(0,0,0,0.25);"></button>
+
+  <!-- Application Scripts -->
+  <script src="config.js?v=1.4.0"></script>
+  <script src="js/products.js?v=1.4.0"></script>
+  <script src="js/telegram-mock.js?v=1.4.0"></script>
+  <script src="js/app.js?v=1.4.0"></script>
+</body>
+</html>
