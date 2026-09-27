@@ -1369,9 +1369,14 @@
               ✓ ស្គាល់គណនីស្វ័យប្រវត្តិ (Chat ID: ${CONFIG.adminChatId})
             </div>
           </div>
-          <button id="admin-close-modal-btn" style="background: none; border: 1px solid var(--tg-theme-border-color); color: var(--tg-theme-text-color); font-size: 11px; font-weight: 600; padding: 5px 12px; border-radius: var(--radius-sm); cursor: pointer;">
-            ✕ បិទផ្ទាំង
-          </button>
+          <div style="display: flex; gap: 6px; align-items: center;">
+            <button id="admin-logout-btn" style="background: none; border: 1px solid var(--tg-theme-border-color); color: #e74c3c; font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: var(--radius-sm); cursor: pointer;">
+              🔒 ចាកចេញ
+            </button>
+            <button id="admin-close-modal-btn" style="background: none; border: 1px solid var(--tg-theme-border-color); color: var(--tg-theme-text-color); font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: var(--radius-sm); cursor: pointer;">
+              ✕ បិទផ្ទាំង
+            </button>
+          </div>
         </div>
 
         <div class="admin-tabs">
@@ -1395,28 +1400,41 @@
       }
 
       // Logout handler
-      document.getElementById('admin-logout-btn').onclick = () => {
-        state.isAdminAuthenticated = false;
-        sessionStorage.removeItem('sv_admin_auth');
-        triggerHaptic('light');
-        showToast('បានចាកចេញពីគណនីគ្រប់គ្រង!', '👋');
-        renderAdminLogin(container);
-      };
+      const logoutBtn = document.getElementById('admin-logout-btn');
+      if (logoutBtn) {
+        logoutBtn.onclick = () => {
+          state.isAdminAuthenticated = false;
+          sessionStorage.removeItem('sv_admin_auth');
+          triggerHaptic('light');
+          showToast('បានចាកចេញពីគណនីគ្រប់គ្រង!', '👋');
+          renderAdminLogin(container);
+        };
+      }
 
-      document.getElementById('tab-btn-products').onclick = () => {
-        activeAdminTab = 'products';
-        renderDashboardContent();
-      };
-      document.getElementById('tab-btn-settings').onclick = () => {
-        activeAdminTab = 'settings';
-        renderDashboardContent();
-      };
+      // Tab switcher handlers
+      const tabProductsBtn = document.getElementById('tab-btn-products');
+      if (tabProductsBtn) {
+        tabProductsBtn.onclick = () => {
+          activeAdminTab = 'products';
+          renderDashboardContent();
+        };
+      }
+
+      const tabSettingsBtn = document.getElementById('tab-btn-settings');
+      if (tabSettingsBtn) {
+        tabSettingsBtn.onclick = () => {
+          activeAdminTab = 'settings';
+          renderDashboardContent();
+        };
+      }
 
       const tabContent = document.getElementById('admin-tab-content');
-      if (activeAdminTab === 'products') {
-        renderProductsManager(tabContent);
-      } else {
-        renderSettingsManager(tabContent);
+      if (tabContent) {
+        if (activeAdminTab === 'products') {
+          renderProductsManager(tabContent);
+        } else {
+          renderSettingsManager(tabContent);
+        }
       }
     }
 
@@ -2034,70 +2052,93 @@
         </div>
       `;
 
-      document.getElementById('save-admin-settings-btn').onclick = () => {
-        const val = document.getElementById('admin-chat-id-input').value.trim();
-        CONFIG.adminChatId = val;
-        localStorage.setItem('sv_admin_chat_id', val);
-        triggerHaptic('success');
-        showToast('បានរក្សាទុក Admin Chat ID!', '⚙️');
-      };
+      const saveAdminBtn = document.getElementById('save-admin-settings-btn');
+      if (saveAdminBtn) {
+        saveAdminBtn.onclick = () => {
+          const idInput = document.getElementById('admin-chat-id-input');
+          const val = idInput ? idInput.value.trim() : '';
+          CONFIG.adminChatId = val;
+          localStorage.setItem('sv_admin_chat_id', val);
+          triggerHaptic('success');
+          showToast('បានរក្សាទុក Admin Chat ID!', '⚙️');
+        };
+      }
 
-      document.getElementById('save-new-password-btn').onclick = () => {
-        const newPass = document.getElementById('new-admin-password-input').value.trim();
-        if (!newPass || newPass.length < 4) {
-          triggerHaptic('error');
-          showToast('ពាក្យសម្ងាត់ត្រូវមានយ៉ាងតិច ៤ តួអក្សរ!', '⚠️');
-          return;
-        }
-        localStorage.setItem('sv_custom_admin_password', newPass);
-        triggerHaptic('success');
-        showToast('បានប្តូរពាក្យសម្ងាត់ជោគជ័យ!', '🔒');
-        renderDashboardContent();
-      };
+      const savePassBtn = document.getElementById('save-new-password-btn');
+      if (savePassBtn) {
+        savePassBtn.onclick = () => {
+          const passInput = document.getElementById('new-admin-password-input');
+          const newPass = passInput ? passInput.value.trim() : '';
+          if (!newPass || newPass.length < 4) {
+            triggerHaptic('error');
+            showToast('ពាក្យសម្ងាត់ត្រូវមានយ៉ាងតិច ៤ តួអក្សរ!', '⚠️');
+            return;
+          }
+          localStorage.setItem('sv_custom_admin_password', newPass);
+          triggerHaptic('success');
+          showToast('បានប្តូរពាក្យសម្ងាត់ជោគជ័យ!', '🔒');
+          renderDashboardContent();
+        };
+      }
 
       // Cloud Sync Button Handlers
-      document.getElementById('save-cloud-settings-btn').onclick = () => {
-        const url = document.getElementById('cloud-api-url-input').value.trim();
-        const key = document.getElementById('cloud-api-key-input').value.trim();
-        localStorage.setItem('sv_cloud_api_url', url);
-        localStorage.setItem('sv_cloud_api_key', key);
-        localStorage.setItem('sv_cloud_enabled', url ? 'true' : 'false');
-        triggerHaptic('success');
-        showToast('បានរក្សាទុកការកំណត់ Cloud Sync!', '☁️');
-        renderDashboardContent();
-      };
-
-      document.getElementById('push-cloud-now-btn').onclick = async () => {
-        const url = document.getElementById('cloud-api-url-input').value.trim();
-        const key = document.getElementById('cloud-api-key-input').value.trim();
-        if (!url) {
-          triggerHaptic('error');
-          showToast('សូមបញ្ចូល Cloud Database URL ជាមុនសិន!', '⚠️');
-          return;
-        }
-        localStorage.setItem('sv_cloud_api_url', url);
-        localStorage.setItem('sv_cloud_api_key', key);
-        localStorage.setItem('sv_cloud_enabled', 'true');
-        await syncProductsToCloud(state.products, false);
-        renderDashboardContent();
-      };
-
-      document.getElementById('pull-cloud-now-btn').onclick = async () => {
-        const url = document.getElementById('cloud-api-url-input').value.trim();
-        const key = document.getElementById('cloud-api-key-input').value.trim();
-        if (!url) {
-          triggerHaptic('error');
-          showToast('សូមបញ្ចូល Cloud Database URL ជាមុនសិន!', '⚠️');
-          return;
-        }
-        localStorage.setItem('sv_cloud_api_url', url);
-        localStorage.setItem('sv_cloud_api_key', key);
-        localStorage.setItem('sv_cloud_enabled', 'true');
-        const items = await syncProductsFromCloud(false);
-        if (items) {
+      const saveCloudBtn = document.getElementById('save-cloud-settings-btn');
+      if (saveCloudBtn) {
+        saveCloudBtn.onclick = () => {
+          const urlInput = document.getElementById('cloud-api-url-input');
+          const keyInput = document.getElementById('cloud-api-key-input');
+          const url = urlInput ? urlInput.value.trim() : '';
+          const key = keyInput ? keyInput.value.trim() : '';
+          localStorage.setItem('sv_cloud_api_url', url);
+          localStorage.setItem('sv_cloud_api_key', key);
+          localStorage.setItem('sv_cloud_enabled', url ? 'true' : 'false');
+          triggerHaptic('success');
+          showToast('បានរក្សាទុកការកំណត់ Cloud Sync!', '☁️');
           renderDashboardContent();
-        }
-      };
+        };
+      }
+
+      const pushCloudBtn = document.getElementById('push-cloud-now-btn');
+      if (pushCloudBtn) {
+        pushCloudBtn.onclick = async () => {
+          const urlInput = document.getElementById('cloud-api-url-input');
+          const keyInput = document.getElementById('cloud-api-key-input');
+          const url = urlInput ? urlInput.value.trim() : '';
+          const key = keyInput ? keyInput.value.trim() : '';
+          if (!url) {
+            triggerHaptic('error');
+            showToast('សូមបញ្ចូល Cloud Database URL ជាមុនសិន!', '⚠️');
+            return;
+          }
+          localStorage.setItem('sv_cloud_api_url', url);
+          localStorage.setItem('sv_cloud_api_key', key);
+          localStorage.setItem('sv_cloud_enabled', 'true');
+          await syncProductsToCloud(state.products, false);
+          renderDashboardContent();
+        };
+      }
+
+      const pullCloudBtn = document.getElementById('pull-cloud-now-btn');
+      if (pullCloudBtn) {
+        pullCloudBtn.onclick = async () => {
+          const urlInput = document.getElementById('cloud-api-url-input');
+          const keyInput = document.getElementById('cloud-api-key-input');
+          const url = urlInput ? urlInput.value.trim() : '';
+          const key = keyInput ? keyInput.value.trim() : '';
+          if (!url) {
+            triggerHaptic('error');
+            showToast('សូមបញ្ចូល Cloud Database URL ជាមុនសិន!', '⚠️');
+            return;
+          }
+          localStorage.setItem('sv_cloud_api_url', url);
+          localStorage.setItem('sv_cloud_api_key', key);
+          localStorage.setItem('sv_cloud_enabled', 'true');
+          const items = await syncProductsFromCloud(false);
+          if (items) {
+            renderDashboardContent();
+          }
+        };
+      }
     }
 
     renderDashboardContent();
